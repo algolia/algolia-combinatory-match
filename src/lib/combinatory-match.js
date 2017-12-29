@@ -63,6 +63,7 @@ class AlgoliaCombinatoryMatch {
   async run(
     query: string
   ): Promise<{ results: Array<any>, matches: Array<Match> }> {
+    this.matches = [];
     query = query.toLowerCase();
     await this.getMatches(query);
     query = this.removeMatchedWords(query);
