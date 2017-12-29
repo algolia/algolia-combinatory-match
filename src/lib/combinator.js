@@ -1,11 +1,17 @@
 /* @flow */
 
-export default class Combinator {
-  client: any;
+import algoliasearch from 'algoliasearch';
+
+export default class AlgoliaCombinator {
+  client: algoliasearch.AlgoliaIndex;
   indexName: string;
   attribute: string;
 
-  constructor(client: any, indexName: string, attribute: string) {
+  constructor(
+    client: algoliasearch.AlgoliaIndex,
+    indexName: string,
+    attribute: string
+  ) {
     this.client = client;
     this.indexName = indexName;
     this.attribute = attribute;
@@ -25,7 +31,7 @@ export default class Combinator {
     return res;
   }
 
-  async run(query: string, check: (string, any) => boolean): Promise<any> {
+  async run(query: string, check: ?(string, any) => boolean): Promise<any> {
     const combinations = this.getCombinations(query);
     const potentialMatches = [];
     const queries = combinations.map(combination => ({
@@ -36,7 +42,10 @@ export default class Combinator {
     for (let i = 0; i < content.results.length; ++i) {
       const hits = content.results[i].hits;
       for (const hit of hits) {
-        if (check(combinations[i], hit)) {
+        const ok = check
+          ? check(combinations[i], hit)
+          : hit._highlightResult[this.attribute].fullyHighlighted;
+        if (ok) {
           potentialMatches.push({ matchedWords: combinations[i], hit });
         }
       }
