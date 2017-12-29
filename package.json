@@ -2,7 +2,7 @@
   "name": "algolia-combinatory-match",
   "version": "1.0.1",
   "description": "An Algolia tool to match and get known entities in your query.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "repository": "https://github.com/algolia/algolia-combinatory-match.git",
   "author": "Yannick Utard <yannickutard@gmail.com>",
   "license": "MIT",
