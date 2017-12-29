@@ -13,7 +13,7 @@ async function main() {
   const data = await algoliaCombinatoryMatch.run(
     'find an american restaurant in manhattan'
   );
-  console.log(data)
+  console.log(data);
 }
 
 main();

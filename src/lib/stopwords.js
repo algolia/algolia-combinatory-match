@@ -172,4 +172,7 @@ export default [
   'yours',
   'yourself',
   'yourselves',
+  'restaurant',
+  'find',
+  'look',
 ];
