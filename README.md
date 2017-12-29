@@ -10,7 +10,7 @@
 ## Usage
 
 ```js
-import AlgoliaCombinatoryMatch from '../src/index';
+import AlgoliaCombinatoryMatch from 'algolia-combinatory-match';
 
 const algoliaCombinatoryMatch = new AlgoliaCombinatoryMatch(
   'APP_ID',
@@ -26,7 +26,7 @@ async function main() {
     'find an american restaurant in manhattan'
   );
 }
-``
+```
 
 The `result` will be an object of this format:
 
