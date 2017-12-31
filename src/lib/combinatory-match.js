@@ -20,6 +20,7 @@ type Index = {
 class AlgoliaCombinatoryMatch {
   indices: Array<Index>;
   matches: Array<Match>;
+  stopWords: Array<string>;
 
   constructor(appId: string, apiKey: string, indices: Array<any>) {
     const client = algoliasearch(appId, apiKey);
@@ -30,6 +31,7 @@ class AlgoliaCombinatoryMatch {
       combinator: new AlgoliaCombinator(client, index.name, index.attribute),
       results: [],
     }));
+    this.stopWords = stopWords;
   }
 
   async search(index: algoliasearch.AlgoliaIndex, query: string): Promise<any> {
@@ -47,10 +49,10 @@ class AlgoliaCombinatoryMatch {
     }
   }
 
-  async getMatches(query: string) {
+  async getMatches(query: string, check: ?(string, any) => boolean) {
     if (query !== '') {
       for (const index of this.indices) {
-        const data = await index.combinator.run(query);
+        const data = await index.combinator.run(query, check);
         if (data) {
           this.addMatch(data.hit, index.name, data.matchedWords);
         }
@@ -61,11 +63,12 @@ class AlgoliaCombinatoryMatch {
   }
 
   async run(
-    query: string
+    query: string,
+    check: ?(string, any) => boolean
   ): Promise<{ results: Array<any>, matches: Array<Match> }> {
     this.matches = [];
     query = query.toLowerCase();
-    await this.getMatches(query);
+    await this.getMatches(query, check);
     query = this.removeMatchedWords(query);
     query = this.removeStopWords(query);
     await this.getResults(query);
@@ -87,7 +90,7 @@ class AlgoliaCombinatoryMatch {
     const queryWords = string.split(' ');
     const finalString = [];
     for (let i = 0; i < queryWords.length - 1; ++i) {
-      if (stopWords.indexOf(queryWords[i]) !== -1) continue;
+      if (this.stopWords.indexOf(queryWords[i]) !== -1) continue;
       finalString.push(queryWords[i]);
     }
     finalString.push(queryWords[queryWords.length - 1]);
@@ -101,6 +104,14 @@ class AlgoliaCombinatoryMatch {
       finalString = finalString.replace(matchedWords, '');
     }
     return finalString;
+  }
+
+  setStopWords(newStopWords: Array<string>) {
+    this.stopWords = newStopWords;
+  }
+
+  expandStopWords(newStopWords: Array<string>) {
+    this.stopWords.concat(newStopWords);
   }
 }
 

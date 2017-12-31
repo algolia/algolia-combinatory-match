@@ -1,4 +1,5 @@
 import AlgoliaCombinatoryMatch from '../src/index';
+import assert from 'assert';
 
 const algoliaCombinatoryMatch = new AlgoliaCombinatoryMatch(
   'testing4SO9ECO2EL',
@@ -13,7 +14,8 @@ async function main() {
   const data = await algoliaCombinatoryMatch.run(
     'find an american restaurant in manhattan'
   );
-  console.log(data);
+  assert(data.matches[0].matchedWords === 'american');
+  assert(data.matches[1].matchedWords === 'manhattan');
 }
 
 main();
